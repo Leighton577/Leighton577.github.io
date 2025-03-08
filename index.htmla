@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NES Emulator</title>
+    <script src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <h1>NES Emulator</h1>
+    <input type="file" id="romInput" accept=".nes">
+    <br><br>
+    <canvas id="nesCanvas" width="256" height="240"></canvas>
+    <script>
+        const nes = new jsnes.NES({
+            onFrame: (frameBuffer) => {
+                let ctx = canvas.getContext("2d");
+                let imageData = ctx.getImageData(0, 0, 256, 240);
+                let data = imageData.data;
+                for (let i = 0; i < frameBuffer.length; i++) {
+                    data[i * 4] = frameBuffer[i];
+                    data[i * 4 + 1] = frameBuffer[i];
+                    data[i * 4 + 2] = frameBuffer[i];
+                    data[i * 4 + 3] = 255;
+                }
+                ctx.putImageData(imageData, 0, 0);
+            }
+        });
+
+        function loadPreloadedROM() {
+            let base64ROM = "TkVTGiAgoVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQICAwAAAAAAAAAAAAAAAAAAAAAA";
+            let binaryString = atob(base64ROM);
+            nes.loadROM(binaryString);
+            requestAnimationFrame(emulateFrame);
+        }
+
+        document.getElementById("romInput").addEventListener("change", function(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function() {
+                    nes.loadROM(reader.result);
+                    requestAnimationFrame(emulateFrame);
+                };
+                reader.readAsBinaryString(file);
+            }
+        });
+
+        function emulateFrame() {
+            nes.frame();
+            requestAnimationFrame(emulateFrame);
+        }
+
+        window.onload = loadPreloadedROM;
+    </script>
+</body>
+</html>
