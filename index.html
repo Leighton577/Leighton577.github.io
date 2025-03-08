@@ -26,23 +26,4 @@
                     data[i * 4 + 2] = frameBuffer[i];
                     data[i * 4 + 3] = 255;
                 }
-                ctx.putImageData(imageData, 0, 0);
-            }
-        });
-
-        function loadPreloadedROM() {
-            let base64ROM = "TkVTGiAgoVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAgMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQICAwAAAAAAAAAAAAAAAAAAAAAA";
-            let binaryString = atob(base64ROM);
-            nes.loadROM(binaryString);
-            requestAnimationFrame(emulateFrame);
-        }
-
-        function emulateFrame() {
-            nes.frame();
-            requestAnimationFrame(emulateFrame);
-        }
-
-        window.onload = loadPreloadedROM;
-    </script>
-</body>
-</html>
+                ctx.putImageData(imageData, 0
