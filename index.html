@@ -3,27 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NES Emulator</title>
-    <script src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
+    <title>Sega Genesis Emulator - Sonic the Hedgehog 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-smd@1.0.0/dist/js-smd.min.js"></script>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
         canvas { border: 1px solid black; }
     </style>
 </head>
 <body>
-    <h1>NES Emulator</h1>
-    <canvas id="nesCanvas" width="256" height="240"></canvas>
+    <h1>Sega Genesis Emulator - Sonic the Hedgehog 1</h1>
+    <canvas id="genesisCanvas" width="320" height="224"></canvas>
     <script>
-        const canvas = document.getElementById("nesCanvas");
-        const ctx = canvas.getContext("2d");
-        const nes = new jsnes.NES({
-            onFrame: function(frameBuffer) {
-                let imageData = ctx.getImageData(0, 0, 256, 240);
-                let data = imageData.data;
-                for (let i = 0; i < frameBuffer.length; i++) {
-                    data[i * 4] = frameBuffer[i];
-                    data[i * 4 + 1] = frameBuffer[i];
-                    data[i * 4 + 2] = frameBuffer[i];
-                    data[i * 4 + 3] = 255;
-                }
-                ctx.putImageData(imageData, 0
+        const canvas = document.getElementById('genesisCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Use the direct download link
+        const romUrl = "https://drive.google.com/uc?export=download&id=1lGPeppRnRwTsV7yN6oNrgcZNbsUuWaI8"; // Google Drive direct link
+
+        // Fetch the ROM file from Google Drive
+        fetch(romUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => {
+                // Set up the emulator with the ROM
+                const emulator = new JSMD({
+                    canvas: canvas, // Attach the emulator to the canvas element
+                    onFrame: function(frameBuffer) {
+                        const imageData = ctx.createImageData(frameBuffer.width, frameBuffer.height);
+                        for (let i = 0; i < frameBuffer.length; i++) {
+           
+
